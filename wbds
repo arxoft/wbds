@@ -1,0 +1,66 @@
+#!/bin/bash
+
+NUMERIC='^[0-9]+$'
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
+
+export DISPLAY=:0
+
+# DISPLAY=$(loginctl show-session $(loginctl -a show-user $1 | grep Display | sed 's/Display.//g') | grep Display)
+# echo $DISPLAY
+# exit
+
+
+ROOT=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+DESKTOPS=$ROOT/Desktops
+
+echo "Salam, Peace..."
+echo "${BOLD}Starting Workspace Bound Desktops Service by @arxoft${NORMAL}"
+echo ""
+
+LAST_ALIVE="None"
+if [ -f "$DESKTOPS/current" ]; then
+   TMP=`cat $DESKTOPS/current`
+   if [[ $TMP =~ $NUMERIC ]] ; then
+       LAST_ALIVE=$TMP
+   fi 
+fi 
+
+echo "Last alive workspace was: $LAST_ALIVE" 
+
+if [[ $LAST_ALIVE =~ $NUMERIC ]] ; then
+  PREV=$LAST_ALIVE
+else
+  let PREV=$(wmctrl -d | grep \* | cut -d' ' -f1)+1
+fi
+
+while true
+do
+   sleep 0.1
+   mkdir -p $DESKTOPS
+
+   let CURRENT=$(wmctrl -d | grep \* | cut -d' ' -f1)+1
+
+   if [ $PREV -ne $CURRENT ]; then
+
+      echo
+      echo "A workspace change has occurred. $PREV -> $CURRENT"
+      
+      # Backup the desktop to its (prev) Workspace
+      echo "Backing up Desktop #$PREV"
+      rm -rf $DESKTOPS/$PREV || true
+      mkdir -p $DESKTOPS/$PREV
+      cp -r ~/Desktop/* $DESKTOPS/$PREV/ > /dev/null 2>&1
+      
+      # Load current Desktop
+      echo "Restoring Desktop #$CURRENT"
+      rm -rf ~/Desktop/*
+      mkdir -p $DESKTOPS/$CURRENT
+      cp -r $DESKTOPS/$CURRENT/* ~/Desktop/ > /dev/null 2>&1
+      
+      # Keep the information safe
+      echo $CURRENT > $DESKTOPS/current
+      
+      PREV=$CURRENT
+   fi
+done

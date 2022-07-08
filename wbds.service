@@ -1,0 +1,14 @@
+[Unit]
+Description=Workspace Bound Desktops Service by @arxoft
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=asif
+ExecStart=/home/asif/Dropbox/Workspaces/wbds
+
+[Install]
+WantedBy=multi-user.target
+
