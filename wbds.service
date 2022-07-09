@@ -7,7 +7,7 @@ Type=simple
 Restart=always
 RestartSec=1
 User=asif
-ExecStart=/home/asif/Dropbox/Workspaces/wbds
+ExecStart=/home/asif/Dropbox/www/Workspaces/wbds
 
 [Install]
 WantedBy=multi-user.target

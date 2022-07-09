@@ -1,9 +1,15 @@
 #!/bin/bash
 set -e
-systemctl stop wbds || true
-systemctl disable wbds || true
+
 ROOT=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+sudo systemctl stop wbds || true
+sudo systemctl disable wbds || true
+
+sed -i "/User/c\User=${USER}" $ROOT/wbds.service
 sed -i "/ExecStart/c\ExecStart=${ROOT}/wbds" $ROOT/wbds.service
+
 sudo cp $ROOT/wbds.service /etc/systemd/system/wbds.service
-systemctl start wbds
-systemctl enable wbds
+
+sudo systemctl start wbds
+sudo systemctl enable wbds

@@ -12,7 +12,9 @@ export DISPLAY=:0
 
 
 ROOT=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-DESKTOPS=$ROOT/Desktops
+DESKTOPS=$HOME/.wbds/Desktops
+
+mkdir -p $DESKTOPS
 
 echo "Salam, Peace..."
 echo "${BOLD}Starting Workspace Bound Desktops Service by @arxoft${NORMAL}"
